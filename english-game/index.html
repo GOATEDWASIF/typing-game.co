@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Typing Contest</title>
+  <!-- If style.css is inside the new folder, leave this. If it's in the root, change to "../style.css" -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Language Switch Button (Goes back to main typing game) -->
+  <div style="position: absolute; top: 15px; right: 15px; z-index: 1000;">
+    <a href="../index.html" style="padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-family: sans-serif; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">BACK</a>
+  </div>
+
+  <div id="game">
+    <h1>Tatsumi JHS Typing .eng</h1>
+
+    <div id="word-box">
+      <div id="kanji">Press START</div>
+      <div id="kana" style="display: none;"></div>
+      <div id="romaji-guide"></div>
+    </div>
+
+    <input
+      type="text"
+      id="input"
+      placeholder="Press START to begin typing"
+      autocomplete="off"
+      disabled
+    >
+
+    <div id="status">
+      <div id="score">Score: 0</div>
+      <div id="time">Time Left: 60</div>
+    </div>
+
+    <button id="start">START</button>
+
+    <div id="game-over"></div>
+  </div>
+
+  <!-- Audio sources. If your sounds folder is inside the new folder, leave this. If it's in the root, add "../" to the front -->
+  <audio id="se-correct" src="sounds/correct.mp3" preload="auto"></audio>
+  <audio id="se-miss" src="sounds/miss.mp3" preload="auto"></audio>
+  <audio id="se-start" src="sounds/start.mp3" preload="auto"></audio>
+  <audio id="se-end" src="sounds/end.mp3" preload="auto"></audio>
+
+  <!-- If script.js is inside the new folder, leave this. If it's in the root, change to "../script.js" -->
+  <script src="script.js"></script>
+</body>
+</html>
