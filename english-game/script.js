@@ -144,7 +144,7 @@ if (musicToggle) musicToggle.addEventListener("click", () => {
 
 
 /* Shared contest leaderboard. Deploy google-sheets/Code.gs as a Web App, then paste its URL here. */
-const SCORE_SHEET_WEB_APP_URL = "";
+const SCORE_SHEET_WEB_APP_URL = window.SCORE_SHEET_WEB_APP_URL || "";
 const LOCAL_SCORE_KEY = "tatsumi-typing-contest-scores-v1";
 const contestantNameInput = document.getElementById("contestant-name");
 const leaderboardList = document.getElementById("leaderboard-list");
