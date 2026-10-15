@@ -8,10 +8,7 @@
 <body>
   <div class="page-loader" aria-label="Loading" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>TATSUMI TYPING</span></div></div>
 
-  <!-- Language Switch Button (Goes to the English game) -->
-  <div style="position: absolute; top: 15px; right: 15px; z-index: 1000;">
-    <a href="english-game/index.html" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-family: sans-serif; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">ENG</a>
-  </div>
+  <div class="language-switch-wrap"><a class="language-switch" href="english-game/index.html" aria-label="Switch to English">ENGLISH VERSION <span aria-hidden="true">→</span></a></div>
 
   <div id="game">
     <h1>辰巳中タイピング</h1>
@@ -36,6 +33,7 @@
     </div>
 
     <button id="start">START</button>
+    <button id="music-toggle" type="button" aria-pressed="false">♫ Music: Off</button>
 
     <div id="game-over"></div>
   </div>
@@ -52,6 +50,22 @@
     if (loader) window.setTimeout(() => loader.classList.add("is-hidden"), 180);
   });
 </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".language-switch").forEach(link => {
+        link.addEventListener("click", event => {
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          const destination = link.href;
+          const game = document.getElementById("game");
+          if (game) game.classList.add("is-transitioning");
+          document.body.classList.add("page-leaving");
+          window.setTimeout(() => { window.location.href = destination; }, 220);
+        });
+      });
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
