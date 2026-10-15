@@ -1,23 +1,22 @@
 :root {
-  --bg: #140a0a;             /* Dark red-tinted background */
-  --panel: #261111;          /* Dark burgundy panel background */
-  --accent: #ff4a4a;         /* Vibrant neon red for main elements */
-  --accent2: #ff8034;        /* Fiery orange-red for gradients */
-  --text: #ffffff;           /* Crisp white for readable text */
-  --subtext: #ffd1d1;        /* Light red-tinted white for subtle text */
-  --danger: #ff3333;         /* Bright red for game-over/errors */
+  --bg: #140a0a;
+  --panel: #261111;
+  --accent: #ff4a4a;
+  --accent2: #ff8034;
+  --text: #ffffff;
+  --subtext: #ffd1d1;
+  --danger: #ff3333;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html, body {
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; /* Prevents unwanted scrollbars from appearing */
+  width: 100%;
+  min-height: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,31 +25,24 @@ html, body {
   color: var(--text);
 }
 
-/* =========================
-   Main Game Panel & Shake
-   ========================= */
 #game {
   width: min(90vw, 125vh);
+  max-width: 100%;
   max-height: 96vh;
   padding: min(2.5vh, 2.2vw) min(4vh, 3.5vw);
   border-radius: min(3vh, 2.5vw);
   background: linear-gradient(160deg, #421616, #1c0a0a);
-  box-shadow:
-    0 24px 50px rgba(0, 0, 0, 0.65),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-/* HARD SHAKE ANIMATION EFFECT */
-.shake {
-  animation: aggressive-shake 0.15s linear quick;
-}
+.shake { animation: aggressive-shake 0.28s ease-in-out; }
 
 @keyframes aggressive-shake {
-  0% { transform: translate(0, 0); }
+  0%, 100% { transform: translate(0, 0); }
   10% { transform: translate(-12px, -6px); }
   20% { transform: translate(10px, 8px); }
   30% { transform: translate(-8px, 4px); }
@@ -60,12 +52,8 @@ html, body {
   70% { transform: translate(-12px, 4px); }
   80% { transform: translate(10px, -6px); }
   90% { transform: translate(-6px, 8px); }
-  100% { transform: translate(0, 0); }
 }
 
-/* =========================
-   Title
-   ========================= */
 h1 {
   margin: 0 0 min(1vh, 0.8vw);
   font-size: min(4.8vh, 4vw);
@@ -74,9 +62,6 @@ h1 {
   text-shadow: 0 0 15px rgba(255, 74, 74, 0.4);
 }
 
-/* =========================
-   Word Display
-   ========================= */
 #word-box {
   margin: min(1vh, 0.8vw) 0;
   padding: min(4.5vh, 3.5vw) min(3vh, 2.5vw);
@@ -91,7 +76,7 @@ h1 {
   line-height: 1.25;
   white-space: pre-wrap;
   word-break: break-word;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 #kana {
@@ -102,7 +87,7 @@ h1 {
   line-height: 1.25;
   white-space: pre-wrap;
   word-break: break-word;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 #romaji-guide {
@@ -115,9 +100,6 @@ h1 {
   text-shadow: 0 0 10px rgba(255, 74, 74, 0.5);
 }
 
-/* =========================
-   Input Fields
-   ========================= */
 #input {
   width: 100%;
   margin-top: min(1vh, 0.8vw);
@@ -131,41 +113,25 @@ h1 {
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.06);
 }
 
-#input::placeholder {
-  font-size: min(2.6vh, 2.1vw);
-  color: #a06e6e;
-}
+#input::placeholder { font-size: min(2.6vh, 2.1vw); color: #a06e6e; }
 
 #input:focus {
-  box-shadow:
-    inset 0 0 0 2px var(--accent),
-    0 0 14px rgba(255, 74, 74, 0.5);
+  box-shadow: inset 0 0 0 2px var(--accent), 0 0 14px rgba(255, 74, 74, 0.5);
 }
 
-#input:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+#input:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* =========================
-   Game Status (Score & Timer)
-   ========================= */
 #status {
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
   margin-top: min(1.5vh, 1.2vw);
   font-size: min(3.2vh, 2.6vw);
   font-weight: 600;
 }
 
-#score,
-#time {
-  color: var(--subtext);
-}
+#score, #time { color: var(--subtext); }
 
-/* =========================
-   Action Button
-   ========================= */
 #start {
   margin-top: min(1.5vh, 1.2vw);
   width: 100%;
@@ -181,23 +147,23 @@ h1 {
   transition: transform 0.12s, box-shadow 0.12s;
 }
 
-#start:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 32px rgba(255, 74, 74, 0.5);
-}
+#start:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(255, 74, 74, 0.5); }
+#start:active { transform: translateY(1px); box-shadow: 0 6px 16px rgba(255, 74, 74, 0.3); }
 
-#start:active {
-  transform: translateY(1px);
-  box-shadow: 0 6px 16px rgba(255, 74, 74, 0.3);
-}
-
-/* =========================
-   Game Over Overlay
-   ========================= */
 #game-over {
   margin-top: min(1.2vh, 1vw);
   font-size: min(4vh, 3.2vw);
   font-weight: 800;
   color: var(--danger);
   text-shadow: 0 0 12px rgba(255, 51, 51, 0.4);
+}
+
+@media (max-width: 600px) {
+  #game { width: 94vw; max-height: 94vh; padding: 5vw; }
+  h1 { font-size: clamp(1.25rem, 6vw, 2rem); }
+  #kanji { font-size: clamp(2rem, 10vw, 4rem); }
+  #kana { font-size: clamp(1.1rem, 5vw, 2rem); }
+  #status { font-size: 1rem; }
+  #input { font-size: 1.25rem; }
+  #start { font-size: 1.1rem; padding: 0.8rem; }
 }
