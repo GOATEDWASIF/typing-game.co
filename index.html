@@ -8,10 +8,12 @@
 <body>
   <div class="page-loader" aria-label="Loading" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>TATSUMI TYPING</span></div></div>
 
-  <div class="language-switch-wrap"><a class="language-switch" href="english-game/index.html" aria-label="Switch to English">ENGLISH VERSION <span aria-hidden="true">→</span></a></div>
+  <div class="language-switch-wrap"><a class="language-switch" href="english-game/index.html" aria-label="Switch to English"><span>EN</span><strong>English</strong><span class="switch-arrow" aria-hidden="true">↗</span></a></div>
 
   <div id="game">
     <h1>辰巳中タイピング</h1>
+
+    <div class="contest-controls"><label for="contestant-name">参加者名</label><input id="contestant-name" type="text" maxlength="24" autocomplete="nickname" placeholder="名前を入力してください"><p class="contest-hint">名前を入力してから START を押してください</p></div>
 
     <div id="word-box">
       <div id="kanji">スタート</div>
@@ -36,6 +38,7 @@
     <button id="music-toggle" type="button" aria-pressed="false">♫ Music: Off</button>
 
     <div id="game-over"></div>
+    <section id="leaderboard" class="leaderboard" aria-live="polite"><h2>🏆 ランキング</h2><p class="leaderboard-status">スコア送信の準備ができています</p><ol id="leaderboard-list"><li>まだスコアがありません</li></ol></section>
   </div>
 
   <!-- 固定された効果音 (Removed "sounds/") -->
