@@ -205,3 +205,46 @@ a { backdrop-filter:blur(12px); box-shadow:0 8px 22px rgba(0,0,0,.18); }
 .page-loader__spinner { width:44px; height:44px; border-radius:50%; border:3px solid rgba(255,255,255,.18); border-top-color:var(--accent); border-right-color:var(--accent2); animation:loader-spin 850ms linear infinite; box-shadow:0 0 24px rgba(255,255,255,.12); }
 @keyframes loader-spin { to{transform:rotate(360deg)} }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; } }
+
+
+/* Ubuntu typography, language switch, transitions, and ambient music controls */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+:root { --switch-gradient: linear-gradient(110deg,var(--accent),var(--accent2)); }
+html, body, button, input, select, textarea, a, #game, #game * {
+  font-family: 'Ubuntu', 'Noto Sans JP', sans-serif !important;
+}
+body {
+  background: linear-gradient(125deg,var(--bg),var(--panel),color-mix(in srgb,var(--accent) 20%,var(--bg)),var(--panel),var(--bg));
+  background-size: 350% 350%;
+  animation: gradient-drift 22s ease-in-out infinite;
+  transition: background 700ms ease;
+}
+@keyframes gradient-drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+.language-switch-wrap { position: fixed; top: 18px; right: 18px; z-index: 1000; }
+.language-switch {
+  min-width: 190px; min-height: 48px; padding: 13px 24px; display: inline-flex;
+  align-items: center; justify-content: center; gap: 12px;
+  border-radius: 999px; color: #fff; text-decoration: none; font-weight: 700;
+  font-size: 14px; letter-spacing: .035em; background: var(--switch-gradient);
+  box-shadow: 0 8px 24px color-mix(in srgb,var(--accent) 28%,transparent);
+  border: 1px solid rgba(255,255,255,.24); backdrop-filter: blur(14px);
+  transition: transform 240ms cubic-bezier(.2,.8,.2,1), box-shadow 240ms ease, filter 240ms ease;
+}
+.language-switch:hover { transform: translateY(-3px) scale(1.025); box-shadow: 0 13px 30px color-mix(in srgb,var(--accent) 38%,transparent); filter: brightness(1.08); }
+.language-switch:active { transform: scale(.97); }
+#music-toggle {
+  margin-top: 10px; width: 100%; padding: 12px 20px; border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px; color: var(--subtext); background: rgba(255,255,255,.07);
+  font-weight: 700; cursor: pointer; transition: all 220ms ease;
+}
+#music-toggle:hover, #music-toggle[aria-pressed="true"] { color: var(--text); background: color-mix(in srgb,var(--accent) 18%,transparent); box-shadow: 0 0 20px color-mix(in srgb,var(--accent) 18%,transparent); }
+#game { transition: opacity 320ms ease, transform 320ms ease, box-shadow 250ms ease; }
+#game.is-transitioning { opacity: .45; transform: translateY(8px) scale(.99); }
+#input { transition: box-shadow 220ms ease, transform 160ms ease; }
+#input.input-wrong { animation: wrong-tap 260ms ease; }
+@keyframes wrong-tap { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-3px)} }
+@media(max-width:600px) { .language-switch-wrap { top:10px; right:10px; } .language-switch { min-width:0; min-height:42px; padding:10px 15px; font-size:12px; } }
+@media(prefers-reduced-motion:reduce) { body { animation:none; } }
+
+.shake { animation: wrong-shake 300ms ease-in-out; }
+@keyframes wrong-shake { 0%,100%{transform:translateX(0)} 15%{transform:translateX(-9px)} 30%{transform:translateX(8px)} 45%{transform:translateX(-6px)} 60%{transform:translateX(5px)} 75%{transform:translateX(-3px)} }
