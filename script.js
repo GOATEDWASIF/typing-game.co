@@ -195,6 +195,72 @@ if (musicToggle) musicToggle.addEventListener("click", () => {
   else if (!startAmbientMusic()) musicToggle.textContent = "Music unavailable";
 });
 
+
+/* Shared contest leaderboard. Deploy google-sheets/Code.gs as a Web App, then paste its URL here. */
+const SCORE_SHEET_WEB_APP_URL = "";
+const LOCAL_SCORE_KEY = "tatsumi-typing-contest-scores-v1";
+const contestantNameInput = document.getElementById("contestant-name");
+const leaderboardList = document.getElementById("leaderboard-list");
+const leaderboardStatus = document.querySelector(".leaderboard-status");
+function readLocalScores() {
+  try { return JSON.parse(localStorage.getItem(LOCAL_SCORE_KEY) || "[]"); } catch (_) { return []; }
+}
+function renderLeaderboard(rows) {
+  if (!leaderboardList) return;
+  leaderboardList.replaceChildren();
+  const scores = (rows || []).slice().sort((a,b) => Number(b.score)-Number(a.score)).slice(0,10);
+  if (!scores.length) {
+    const li=document.createElement("li"); li.textContent="No scores yet"; leaderboardList.appendChild(li); return;
+  }
+  scores.forEach((row,index) => {
+    const li=document.createElement("li");
+    li.textContent = (index+1)+". "+String(row.name || "Player")+" · "+Number(row.score || 0)+" pts";
+    leaderboardList.appendChild(li);
+  });
+}
+function refreshLeaderboard() {
+  renderLeaderboard(readLocalScores());
+  if (!SCORE_SHEET_WEB_APP_URL) {
+    if (leaderboardStatus) leaderboardStatus.textContent = "Local scores only · connect the Google Sheet to share scores across devices.";
+    return;
+  }
+  const callbackName = "__typingScoresCallback";
+  window[callbackName] = data => {
+    if (data && Array.isArray(data.scores)) {
+      renderLeaderboard(data.scores);
+      try { localStorage.setItem(LOCAL_SCORE_KEY, JSON.stringify(data.scores)); } catch (_) {}
+      if (leaderboardStatus) leaderboardStatus.textContent = "Live contest leaderboard · Google Sheets";
+    }
+    delete window[callbackName];
+  };
+  const script=document.createElement("script");
+  script.src=SCORE_SHEET_WEB_APP_URL+"?action=leaderboard&callback="+callbackName+"&_="+Date.now();
+  script.onerror=()=>{ if(leaderboardStatus) leaderboardStatus.textContent="Could not load the shared leaderboard. Local scores are still shown."; delete window[callbackName]; script.remove(); };
+  document.head.appendChild(script);
+}
+function submitContestScore(finalScore) {
+  const name=(contestantNameInput && contestantNameInput.value || "").trim().replace(/\s+/g," ").slice(0,24);
+  if (!name) {
+    if (contestantNameInput) { contestantNameInput.focus(); contestantNameInput.classList.add("name-needed"); }
+    if (gameOverEl) gameOverEl.textContent += " · Enter your name to submit your score.";
+    return;
+  }
+  const entry={name,score:Number(finalScore)||0,language:document.documentElement.lang==="ja"?"Japanese":"English",createdAt:new Date().toISOString()};
+  const rows=readLocalScores(); rows.push(entry);
+  try { localStorage.setItem(LOCAL_SCORE_KEY,JSON.stringify(rows.slice(-100))); } catch (_) {}
+  renderLeaderboard(rows);
+  if (!SCORE_SHEET_WEB_APP_URL) {
+    if (leaderboardStatus) leaderboardStatus.textContent = "Saved on this device. Google Sheets sharing is not connected yet.";
+    return;
+  }
+  if (leaderboardStatus) leaderboardStatus.textContent = "Submitting score to the contest sheet…";
+  fetch(SCORE_SHEET_WEB_APP_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(entry)})
+    .then(()=>{ if(leaderboardStatus) leaderboardStatus.textContent="Score sent to Google Sheets. Refreshing shared rankings…"; window.setTimeout(refreshLeaderboard,1200); })
+    .catch(()=>{ if(leaderboardStatus) leaderboardStatus.textContent="Could not send to Google Sheets. Your score is saved on this device."; });
+}
+if (contestantNameInput) contestantNameInput.addEventListener("input",()=>contestantNameInput.classList.remove("name-needed"));
+refreshLeaderboard();
+
 // DOM
 const kanjiEl = document.getElementById("kanji");
 const kanaEl = document.getElementById("kana");
@@ -298,6 +364,11 @@ function updateNextKeyGuide() {
 }
 
 function startGame() {
+  if (contestantNameInput && !contestantNameInput.value.trim()) {
+    contestantNameInput.focus();
+    if (leaderboardStatus) leaderboardStatus.textContent = "参加者名を入力してから開始してください。";
+    return;
+  }
   playSE(seStart);
 
   score = 0;
@@ -353,6 +424,7 @@ function gameOver() {
   } else {
     gameOverEl.textContent = `あなたのスコア: ${finalScore}`;
   }
+  submitContestScore(finalScore);
 }
 
 inputEl.addEventListener("input", () => {
