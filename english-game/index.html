@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="page-loader" aria-label="Loading" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>TYPING CONTEST</span></div></div>
 
   <!-- Language Switch Button (Goes back to the Japanese game) -->
   <div style="position: absolute; top: 15px; right: 15px; z-index: 1000;">
@@ -45,6 +46,12 @@
   <audio id="se-start" src="start.mp3" preload="auto"></audio>
   <audio id="se-end" src="end.mp3" preload="auto"></audio>
 
+  <script>
+  window.addEventListener("load", () => {
+    const loader = document.querySelector(".page-loader");
+    if (loader) window.setTimeout(() => loader.classList.add("is-hidden"), 180);
+  });
+</script>
   <script src="script.js"></script>
 </body>
 </html>
