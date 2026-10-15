@@ -71,11 +71,15 @@ const seMiss = document.getElementById("se-miss");
 const seStart = document.getElementById("se-start");
 const seEnd = document.getElementById("se-end");
 
-const playSE = se => { 
-  if (se) {
-    se.currentTime = 0; 
-    se.play().catch(() => {}); 
-  }
+// Safe sound playback, including browsers that block audio before a user gesture.
+const playSE = se => {
+  if (!se) return;
+  try {
+    se.pause();
+    se.currentTime = 0;
+    const playback = se.play();
+    if (playback && typeof playback.catch === "function") playback.catch(() => {});
+  } catch (_) { /* Audio failure should never stop gameplay. */ }
 };
 
 // DOM References
