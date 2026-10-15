@@ -135,6 +135,66 @@ const playSE = se => {
   } catch (_) { /* Audio failure should never stop gameplay. */ }
 };
 
+
+/* Gentle ambient background music made with Web Audio; starts only after user interaction. */
+let ambientAudioContext = null;
+let ambientNodes = [];
+let ambientMusicOn = false;
+function startAmbientMusic() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return false;
+  if (!ambientAudioContext) {
+    ambientAudioContext = new AudioContextClass();
+    const master = ambientAudioContext.createGain();
+    master.gain.value = 0.0001;
+    master.connect(ambientAudioContext.destination);
+    // A slow, warm C-major / A-minor ambient pad.
+    [130.81, 164.81, 196.00, 261.63].forEach((frequency, i) => {
+      const osc = ambientAudioContext.createOscillator();
+      const voice = ambientAudioContext.createGain();
+      osc.type = i % 2 ? "sine" : "triangle";
+      osc.frequency.value = frequency;
+      voice.gain.value = [0.12, 0.085, 0.07, 0.045][i];
+      osc.connect(voice); voice.connect(master); osc.start();
+      ambientNodes.push(osc, voice);
+    });
+    const lfo = ambientAudioContext.createOscillator();
+    const lfoGain = ambientAudioContext.createGain();
+    lfo.frequency.value = 0.08; lfoGain.gain.value = 0.035;
+    lfo.connect(lfoGain);
+    ambientNodes.push(lfo, lfoGain); lfo.start();
+    master.gain.setTargetAtTime(0.045, ambientAudioContext.currentTime, 1.4);
+    ambientNodes.push(master);
+  } else {
+    ambientAudioContext.resume();
+    const master = ambientNodes[ambientNodes.length - 1];
+    if (master && master.gain) master.gain.setTargetAtTime(0.045, ambientAudioContext.currentTime, 1.2);
+  }
+  ambientMusicOn = true;
+  updateMusicButton();
+  return true;
+}
+function stopAmbientMusic() {
+  if (ambientAudioContext && ambientNodes.length) {
+    const master = ambientNodes[ambientNodes.length - 1];
+    if (master && master.gain) master.gain.setTargetAtTime(0.0001, ambientAudioContext.currentTime, 0.35);
+  }
+  ambientMusicOn = false;
+  updateMusicButton();
+}
+function updateMusicButton() {
+  const button = document.getElementById("music-toggle");
+  if (button) {
+    button.textContent = ambientMusicOn ? "♫ Music: On" : "♫ Music: Off";
+    button.setAttribute("aria-pressed", String(ambientMusicOn));
+  }
+}
+const musicToggle = document.getElementById("music-toggle");
+if (musicToggle) musicToggle.addEventListener("click", () => {
+  if (ambientMusicOn) stopAmbientMusic();
+  else if (!startAmbientMusic()) musicToggle.textContent = "Music unavailable";
+});
+
 // DOM
 const kanjiEl = document.getElementById("kanji");
 const kanaEl = document.getElementById("kana");
@@ -351,6 +411,17 @@ inputEl.addEventListener("input", () => {
     updateNextKeyGuide();
   } else {
     playSE(seMiss);
+    const panel = document.getElementById("game");
+    if (panel) {
+      panel.classList.remove("shake");
+      void panel.offsetWidth;
+      panel.classList.add("shake");
+      window.setTimeout(() => panel.classList.remove("shake"), 360);
+    }
+    inputEl.classList.remove("input-wrong");
+    void inputEl.offsetWidth;
+    inputEl.classList.add("input-wrong");
+    window.setTimeout(() => inputEl.classList.remove("input-wrong"), 300);
     inputEl.value = typedRomajiHistory + currentInput;
   }
 });
