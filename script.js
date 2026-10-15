@@ -253,7 +253,6 @@ function startGame() {
   clearInterval(timer);
   timer = setInterval(() => {
     time--;
-    timeEl.textContent = "残り時間: 60"; // 誤記防止用の修正（表示更新用）
     timeEl.textContent = "残り時間: " + time;
     if (time <= 0) {
       clearInterval(timer);
