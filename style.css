@@ -254,7 +254,7 @@ body {
 /* Contest leaderboard, visible animated gradient, and custom language pill */
 :root { --contest-accent: var(--accent); --contest-accent-2: var(--accent2); }
 html, body { min-height:100%; height:auto; }
-body { min-height:100vh; height:auto; overflow-x:hidden; overflow-y:auto; display:flex; justify-content:center; align-items:center; padding:76px 16px 28px; position:relative; isolation:isolate; }
+body { background:transparent!important; min-height:100vh; height:auto; overflow-x:hidden; overflow-y:auto; display:flex; justify-content:center; align-items:center; padding:76px 16px 28px; position:relative; isolation:isolate; }
 body::before { content:""; position:fixed; inset:-35%; z-index:-1; pointer-events:none; background:linear-gradient(120deg,var(--bg) 8%,var(--panel) 34%,color-mix(in srgb,var(--accent) 40%,var(--panel)) 52%,color-mix(in srgb,var(--accent2) 38%,var(--bg)) 72%,var(--bg)); background-size:300% 300%; animation:contest-gradient-flow 16s ease-in-out infinite; will-change:background-position; }
 @keyframes contest-gradient-flow { 0%,100%{background-position:0% 45%;transform:rotate(0deg) scale(1)} 50%{background-position:100% 55%;transform:rotate(4deg) scale(1.04)} }
 #game { position:relative; z-index:1; width:min(92vw,780px); max-height:none; margin:0 auto; animation:contest-panel-in 720ms cubic-bezier(.2,.8,.2,1) both; }
