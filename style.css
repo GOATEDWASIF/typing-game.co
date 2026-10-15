@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
 :root {
   --bg: #0f1220;
   --panel: #1b1f3b;
@@ -208,7 +209,7 @@ a { backdrop-filter:blur(12px); box-shadow:0 8px 22px rgba(0,0,0,.18); }
 
 
 /* Ubuntu typography, language switch, transitions, and ambient music controls */
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+
 :root { --switch-gradient: linear-gradient(110deg,var(--accent),var(--accent2)); }
 html, body, button, input, select, textarea, a, #game, #game * {
   font-family: 'Ubuntu', 'Noto Sans JP', sans-serif !important;
