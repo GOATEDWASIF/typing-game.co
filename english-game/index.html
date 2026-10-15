@@ -8,10 +8,12 @@
 <body>
   <div class="page-loader" aria-label="Loading" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>TYPING CONTEST</span></div></div>
 
-  <div class="language-switch-wrap"><a class="language-switch" href="../index.html" aria-label="日本語に切り替え"><span aria-hidden="true">←</span> 日本語に切り替え</a></div>
+  <div class="language-switch-wrap"><a class="language-switch" href="../index.html" aria-label="日本語に切り替え"><span>JP</span><strong>日本語</strong><span class="switch-arrow" aria-hidden="true">↗</span></a></div>
 
   <div id="game">
     <h1>Tatsumi JHS Typing .eng</h1>
+
+    <div class="contest-controls"><label for="contestant-name">Contestant name</label><input id="contestant-name" type="text" maxlength="24" autocomplete="nickname" placeholder="Enter your name"><p class="contest-hint">Enter your name before pressing START.</p></div>
 
     <div id="word-box">
       <div id="kanji">Press START</div>
@@ -36,6 +38,7 @@
     <button id="music-toggle" type="button" aria-pressed="false">♫ Music: Off</button>
 
     <div id="game-over"></div>
+    <section id="leaderboard" class="leaderboard" aria-live="polite"><h2>🏆 Contest leaderboard</h2><p class="leaderboard-status">Ready for scores</p><ol id="leaderboard-list"><li>No scores yet</li></ol></section>
   </div>
 
   <!-- 固定された効果音 (Removed "sounds/") -->
