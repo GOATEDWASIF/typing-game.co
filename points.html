@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff0c5">
+<meta name="color-scheme" content="light">
+<title>Points Board | Typing Contest</title>
+<style>
+  :root {
+    color-scheme: light;
+    --cream: #fff0c5;
+    --cream-light: #fff9e9;
+    --ink: #302719;
+    --muted: #76684f;
+    --amber: #b77a24;
+    --line: rgba(115, 82, 31, .16);
+    --glass: rgba(255, 255, 255, .42);
+    --shadow: 0 20px 60px rgba(113, 79, 24, .13);
+    --focus: #155eef;
+  }
+  * { box-sizing: border-box; }
+  html { min-height: 100%; background: var(--cream); }
+  body {
+    margin: 0; min-height: 100vh; min-height: 100dvh; padding: clamp(12px, 3vw, 32px);
+    color: var(--ink); font-family: Ubuntu, "Segoe UI", system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse at 12% 5%, rgba(255,255,255,.92), transparent 34%),
+      radial-gradient(ellipse at 92% 28%, rgba(255,205,101,.42), transparent 35%),
+      linear-gradient(145deg, #fff7dc, var(--cream) 54%, #f6dda0);
+    overflow-x: hidden;
+  }
+  button, input { font: inherit; }
+  button { cursor: pointer; touch-action: manipulation; }
+  button:focus-visible, input:focus-visible, a:focus-visible {
+    outline: 3px solid var(--focus); outline-offset: 3px;
+  }
+  .shell { width: min(100%, 1040px); margin: 0 auto; }
+  .topline { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom: clamp(16px, 3vw, 28px); }
+  .eyebrow { margin:0 0 6px; color:var(--muted); font-size:.76rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+  h1 { margin:0; font-size:clamp(1.55rem, 4vw, 2.5rem); letter-spacing:-.045em; line-height:1.05; }
+  .top-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+  .glass {
+    --mx: 50%; --my: 0%;
+    position:relative; isolation:isolate; overflow:hidden;
+    background:linear-gradient(135deg, rgba(255,255,255,.72), rgba(255,255,255,.24) 45%, rgba(255,255,255,.48));
+    border:1px solid rgba(255,255,255,.78);
+    box-shadow:var(--shadow), inset 0 1px rgba(255,255,255,.92);
+    backdrop-filter:blur(22px) saturate(1.3);
+    -webkit-backdrop-filter:blur(22px) saturate(1.3);
+  }
+  .glass::before {
+    content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; border-radius:inherit;
+    background:
+      radial-gradient(260px circle at var(--mx) var(--my), rgba(255,255,255,.92), transparent 52%),
+      linear-gradient(115deg, rgba(255,255,255,.48), transparent 35%, rgba(221,166,66,.10) 62%, rgba(255,255,255,.46));
+    opacity:.75; transition:opacity .25s ease;
+  }
+  .glass:hover::before, .glass:focus-within::before { opacity:1; }
+  .btn {
+    border:1px solid rgba(126,88,27,.16); border-radius:999px; min-height:44px;
+    padding:10px 16px; color:var(--ink); font-weight:750;
+    background:rgba(255,255,255,.56); box-shadow:inset 0 1px rgba(255,255,255,.9);
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:hover { transform:translateY(-2px); background:rgba(255,255,255,.82); box-shadow:0 8px 22px rgba(113,79,24,.12), inset 0 1px #fff; }
+  .btn:active { transform:scale(.98); }
+  .btn.primary { background:linear-gradient(135deg,#9c651c,#d69b3c); color:#fffdf6; border-color:rgba(126,78,15,.25); }
+  .hero {
+    border-radius:clamp(24px, 4vw, 38px); padding:clamp(20px, 5vw, 48px);
+    display:grid; grid-template-columns:minmax(0, 1fr) minmax(180px, .7fr); align-items:center; gap:24px;
+    margin-bottom:18px; transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+  }
+  .hero:hover { transform:translateY(-2px); box-shadow:0 28px 70px rgba(113,79,24,.18), inset 0 1px #fff; }
+  .hero h2 { margin:0 0 10px; font-size:clamp(1.3rem,3vw,2rem); letter-spacing:-.035em; }
+  .hero p { max-width:42ch; margin:0; color:var(--muted); line-height:1.55; }
+  .total-wrap { text-align:center; border-radius:26px; padding:20px 12px; background:rgba(255,255,255,.42); border:1px solid rgba(255,255,255,.7); }
+  .total-label { color:var(--muted); font-size:.8rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+  .total { display:block; font-size:clamp(3.2rem, 10vw, 6rem); line-height:1; letter-spacing:-.07em; font-weight:850; font-variant-numeric:tabular-nums; }
+  .total-unit { color:var(--muted); font-weight:700; margin-top:7px; }
+  .toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin:22px 2px 12px; }
+  .toolbar h2 { margin:0; font-size:1.15rem; }
+  .toolbar p { margin:4px 0 0; color:var(--muted); font-size:.88rem; }
+  #players { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+  .player {
+    min-width:0; border-radius:24px; padding:clamp(14px,2.5vw,22px);
+    transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease;
+  }
+  .player:hover { transform:translateY(-3px); box-shadow:0 24px 55px rgba(113,79,24,.18), inset 0 1px #fff; }
+  .player-head { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .avatar { display:grid; place-items:center; flex:0 0 42px; width:42px; height:42px; border-radius:15px; background:linear-gradient(145deg,#fff,#f4d995); color:#76501c; font-weight:900; box-shadow:inset 0 1px #fff,0 5px 14px rgba(113,79,24,.10); }
+  .name { width:100%; min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.62); color:var(--ink); font-weight:750; }
+  .score-label { color:var(--muted); font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+  .score-line { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 14px; }
+  .score-number { min-width:0; font-size:clamp(2.4rem,6vw,4.2rem); line-height:1; letter-spacing:-.065em; font-weight:850; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+  .point-word { color:var(--muted); font-size:.85rem; font-weight:700; }
+  .score-actions { display:grid; grid-template-columns:48px minmax(0,1fr) 48px; gap:8px; }
+  .stepper { display:grid; place-items:center; width:100%; min-height:46px; border-radius:15px; border:1px solid var(--line); background:rgba(255,255,255,.65); color:var(--ink); font-size:1.45rem; font-weight:800; transition:transform .18s ease,background .18s ease; }
+  .stepper:hover { background:#fff; transform:translateY(-1px); }
+  .stepper:active { transform:scale(.96); }
+  .set-score { min-width:0; width:100%; text-align:center; border:1px solid var(--line); border-radius:15px; background:rgba(255,255,255,.72); padding:8px; font-weight:750; color:var(--ink); }
+  .player-foot { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:12px; }
+  .small-btn { border:0; padding:7px 9px; background:transparent; color:#72521f; font-size:.82rem; font-weight:750; border-radius:10px; }
+  .small-btn:hover { background:rgba(255,255,255,.5); }
+  .empty { grid-column:1/-1; padding:28px; text-align:center; border-radius:24px; color:var(--muted); }
+  .footer { margin:18px 4px 0; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:.78rem; }
+  .status { min-height:1.2em; color:#5b481e; font-size:.83rem; }
+  @media (max-width:640px) {
+    body { padding:12px; }
+    .topline { align-items:flex-start; }
+    .top-actions { max-width:45%; }
+    .btn { padding:9px 12px; min-height:42px; font-size:.84rem; }
+    .hero { grid-template-columns:1fr; gap:18px; padding:20px; }
+    .hero p { max-width:none; }
+    .total-wrap { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; padding:14px; }
+    .total { font-size:clamp(3rem,17vw,5rem); }
+    .total-unit { margin:0; }
+    #players { grid-template-columns:1fr; gap:11px; }
+    .player { padding:16px; }
+    .score-number { font-size:clamp(2.8rem,14vw,4rem); }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+    .player:hover,.hero:hover,.btn:hover { transform:none; }
+  }
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .glass { background:rgba(255,249,233,.97); }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<main class="shell">
+  <header class="topline">
+    <div><p class="eyebrow">Tatsumi typing contest</p><h1>Points board</h1></div>
+    <div class="top-actions">
+      <button class="btn" id="fullscreen" type="button">Full screen</button>
+      <a class="btn" href="./" style="display:inline-flex;align-items:center;text-decoration:none">Game</a>
+    </div>
+  </header>
+
+  <section class="hero glass" aria-labelledby="overview-title">
+    <div>
+      <p class="eyebrow">Live score display</p>
+      <h2 id="overview-title">Every point, beautifully clear.</h2>
+      <p>Enter contestants and adjust points manually. Changes are saved on this device, so the board stays ready when you come back.</p>
+    </div>
+    <div class="total-wrap" aria-live="polite" aria-atomic="true">
+      <span class="total-label">Combined points</span>
+      <strong class="total" id="total">0</strong>
+      <span class="total-unit">points</span>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div><h2>Contestants</h2><p>Tap + or −, or type a precise score.</p></div>
+    <button class="btn primary" id="add-player" type="button">＋ Add contestant</button>
+  </div>
+
+  <section id="players" aria-label="Contestant scores"></section>
+  <div class="footer">
+    <span id="save-status" class="status" role="status" aria-live="polite">Saved on this device</span>
+    <button class="small-btn" id="reset-all" type="button">Reset all points</button>
+  </div>
+</main>
+<script>
+(() => {
+  "use strict";
+  const STORAGE_KEY = "tatsumi-points-board-v1";
+  const playersEl = document.getElementById("players");
+  const totalEl = document.getElementById("total");
+  const statusEl = document.getElementById("save-status");
+  let players = load();
+  let nextId = players.reduce((n, p) => Math.max(n, Number(p.id) || 0), 0) + 1;
+
+  function load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      if (Array.isArray(saved)) return saved.filter(p => p && Number.isFinite(Number(p.score))).map((p, i) => ({
+        id: Number(p.id) || i + 1,
+        name: String(p.name || "Contestant").slice(0, 40),
+        score: Math.max(0, Math.min(999999999, Math.round(Number(p.score) || 0)))
+      }));
+    } catch (_) {}
+    return [{ id: 1, name: "Contestant 1", score: 0 }];
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
+      statusEl.textContent = "Saved on this device";
+    } catch (_) {
+      statusEl.textContent = "Could not save here. Keep this tab open.";
+    }
+    renderTotal();
+  }
+
+  function renderTotal() {
+    const total = players.reduce((sum, p) => sum + p.score, 0);
+    totalEl.textContent = total.toLocaleString();
+    totalEl.setAttribute("aria-label", total.toLocaleString() + " combined points");
+  }
+
+  function make(tag, className, text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined) el.textContent = text;
+    return el;
+  }
+
+  function render() {
+    playersEl.replaceChildren();
+    if (!players.length) {
+      const empty = make("div", "empty glass", "No contestants yet. Select “Add contestant” to begin.");
+      playersEl.append(empty);
+    }
+    players.forEach(player => {
+      const card = make("article", "player glass");
+      const head = make("div", "player-head");
+      const avatar = make("div", "avatar", (player.name.trim().charAt(0) || "?").toUpperCase());
+      avatar.setAttribute("aria-hidden", "true");
+      const name = make("input", "name");
+      name.type = "text"; name.maxLength = 40; name.value = player.name;
+      name.setAttribute("aria-label", "Contestant name");
+      name.addEventListener("change", () => {
+        player.name = name.value.trim().slice(0, 40) || "Contestant";
+        save(); render();
+      });
+      head.append(avatar, name);
+      const label = make("div", "score-label", "Current score");
+      const line = make("div", "score-line");
+      const number = make("strong", "score-number", player.score.toLocaleString());
+      number.setAttribute("aria-live", "polite");
+      const word = make("span", "point-word", "pts");
+      line.append(number, word);
+      const actions = make("div", "score-actions");
+      const minus = make("button", "stepper", "−");
+      minus.type = "button"; minus.setAttribute("aria-label", "Subtract one point from " + player.name);
+      minus.addEventListener("click", () => setScore(player, player.score - 1));
+      const exact = make("input", "set-score");
+      exact.type = "number"; exact.min = "0"; exact.max = "999999999"; exact.step = "1"; exact.inputMode = "numeric"; exact.value = String(player.score);
+      exact.setAttribute("aria-label", "Set exact points for " + player.name);
+      exact.addEventListener("change", () => {
+        const value = exact.value.trim();
+        if (value === "") { exact.value = String(player.score); return; }
+        setScore(player, Number(value));
+      });
+      const plus = make("button", "stepper", "+");
+      plus.type = "button"; plus.setAttribute("aria-label", "Add one point to " + player.name);
+      plus.addEventListener("click", () => setScore(player, player.score + 1));
+      actions.append(minus, exact, plus);
+      const foot = make("div", "player-foot");
+      const hint = make("span", "point-word", "Manual score");
+      const remove = make("button", "small-btn", "Remove");
+      remove.type = "button"; remove.addEventListener("click", () => {
+        if (!confirm("Remove " + player.name + " from this board?")) return;
+        players = players.filter(p => p.id !== player.id); save(); render();
+      });
+      foot.append(hint, remove);
+      card.append(head, label, line, actions, foot);
+      playersEl.append(card);
+    });
+    renderTotal();
+  }
+
+  function setScore(player, value) {
+    if (!Number.isFinite(value)) return;
+    player.score = Math.max(0, Math.min(999999999, Math.round(value)));
+    save(); render();
+  }
+
+  document.getElementById("add-player").addEventListener("click", () => {
+    const player = { id: nextId++, name: "Contestant " + nextId, score: 0 };
+    players.push(player); save(); render();
+    const names = playersEl.querySelectorAll(".name");
+    if (names.length) { names[names.length - 1].focus(); names[names.length - 1].select(); }
+  });
+
+  document.getElementById("reset-all").addEventListener("click", () => {
+    if (!confirm("Reset every contestant's score to zero? Names will be kept.")) return;
+    players.forEach(p => { p.score = 0; }); save(); render();
+  });
+
+  document.getElementById("fullscreen").addEventListener("click", async event => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+        event.currentTarget.textContent = "Exit full screen";
+      } else {
+        await document.exitFullscreen();
+        event.currentTarget.textContent = "Full screen";
+      }
+    } catch (_) { statusEl.textContent = "Full screen is not available in this browser."; }
+  });
+  document.addEventListener("fullscreenchange", () => {
+    document.getElementById("fullscreen").textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
+  });
+
+  // Pointer-driven glass highlights are enabled for mouse/trackpad only; touch stays lightweight.
+  if (matchMedia("(hover: hover) and (pointer: fine)").matches && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.querySelectorAll(".glass").forEach(panel => {
+      panel.addEventListener("pointermove", event => {
+        const rect = panel.getBoundingClientRect();
+        panel.style.setProperty("--mx", (event.clientX - rect.left) + "px");
+        panel.style.setProperty("--my", (event.clientY - rect.top) + "px");
+      }, { passive: true });
+    });
+    const observer = new MutationObserver(() => {
+      playersEl.querySelectorAll(".glass").forEach(panel => {
+        if (panel.dataset.liquidReady) return;
+        panel.dataset.liquidReady = "true";
+        panel.addEventListener("pointermove", event => {
+          const rect = panel.getBoundingClientRect();
+          panel.style.setProperty("--mx", (event.clientX - rect.left) + "px");
+          panel.style.setProperty("--my", (event.clientY - rect.top) + "px");
+        }, { passive: true });
+      });
+    });
+    observer.observe(playersEl, { childList: true });
+  }
+  render();
+})();
+</script>
+</body>
+</html>
