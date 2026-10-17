@@ -132,14 +132,14 @@ function stopAmbientMusic() {
 function updateMusicButton() {
   const button = document.getElementById("music-toggle");
   if (button) {
-    button.textContent = ambientMusicOn ? "♫ Music: On" : "♫ Music: Off";
+    button.textContent = ambientMusicOn ? "♫ 音楽：オン" : "♫ 音楽：オフ";
     button.setAttribute("aria-pressed", String(ambientMusicOn));
   }
 }
 const musicToggle = document.getElementById("music-toggle");
 if (musicToggle) musicToggle.addEventListener("click", () => {
   if (ambientMusicOn) stopAmbientMusic();
-  else if (!startAmbientMusic()) musicToggle.textContent = "Music unavailable";
+  else if (!startAmbientMusic()) musicToggle.textContent = "音楽を利用できません";
 });
 
 
@@ -157,18 +157,18 @@ function renderLeaderboard(rows) {
   leaderboardList.replaceChildren();
   const scores = (rows || []).slice().sort((a,b) => Number(b.score)-Number(a.score)).slice(0,10);
   if (!scores.length) {
-    const li=document.createElement("li"); li.textContent="No scores yet"; leaderboardList.appendChild(li); return;
+    const li=document.createElement("li"); li.textContent="まだスコアがありません"; leaderboardList.appendChild(li); return;
   }
   scores.forEach((row,index) => {
     const li=document.createElement("li");
-    li.textContent = (index+1)+". "+String(row.name || "Player")+" · "+Number(row.score || 0)+" pts";
+    li.textContent = (index+1)+". "+String(row.name || "参加者")+" · "+Number(row.score || 0)+" pts";
     leaderboardList.appendChild(li);
   });
 }
 function refreshLeaderboard() {
   renderLeaderboard(readLocalScores());
   if (!SCORE_SHEET_WEB_APP_URL) {
-    if (leaderboardStatus) leaderboardStatus.textContent = "Local scores only · connect the Google Sheet to share scores across devices.";
+    if (leaderboardStatus) leaderboardStatus.textContent = "端末内のスコアのみです。端末間で共有するにはGoogleスプレッドシートへの接続が必要です。";
     return;
   }
   const callbackName = "__typingScoresCallback";
@@ -176,20 +176,20 @@ function refreshLeaderboard() {
     if (data && Array.isArray(data.scores)) {
       renderLeaderboard(data.scores);
       try { localStorage.setItem(LOCAL_SCORE_KEY, JSON.stringify(data.scores)); } catch (_) {}
-      if (leaderboardStatus) leaderboardStatus.textContent = "Live contest leaderboard · Google Sheets";
+      if (leaderboardStatus) leaderboardStatus.textContent = "ランキングを更新しました（Googleスプレッドシート）";
     }
     delete window[callbackName];
   };
   const script=document.createElement("script");
   script.src=SCORE_SHEET_WEB_APP_URL+"?action=leaderboard&callback="+callbackName+"&_="+Date.now();
-  script.onerror=()=>{ if(leaderboardStatus) leaderboardStatus.textContent="Could not load the shared leaderboard. Local scores are still shown."; delete window[callbackName]; script.remove(); };
+  script.onerror=()=>{ if(leaderboardStatus) leaderboardStatus.textContent="共有ランキングを読み込めませんでした。端末内のスコアを表示しています。"; delete window[callbackName]; script.remove(); };
   document.head.appendChild(script);
 }
 function submitContestScore(finalScore) {
   const name=(contestantNameInput && contestantNameInput.value || "").trim().replace(/\s+/g," ").slice(0,24);
   if (!name) {
     if (contestantNameInput) { contestantNameInput.focus(); contestantNameInput.classList.add("name-needed"); }
-    if (gameOverEl) gameOverEl.textContent += " · Enter your name to submit your score.";
+    if (gameOverEl) gameOverEl.textContent += "・スコア送信には参加者名を入力してください。";
     return;
   }
   const entry={name,score:Number(finalScore)||0,language:document.documentElement.lang==="ja"?"Japanese":"English",createdAt:new Date().toISOString()};
@@ -197,13 +197,13 @@ function submitContestScore(finalScore) {
   try { localStorage.setItem(LOCAL_SCORE_KEY,JSON.stringify(rows.slice(-100))); } catch (_) {}
   renderLeaderboard(rows);
   if (!SCORE_SHEET_WEB_APP_URL) {
-    if (leaderboardStatus) leaderboardStatus.textContent = "Saved on this device. Google Sheets sharing is not connected yet.";
+    if (leaderboardStatus) leaderboardStatus.textContent = "この端末に保存しました。Googleスプレッドシートとの共有は未接続です。";
     return;
   }
-  if (leaderboardStatus) leaderboardStatus.textContent = "Submitting score to the contest sheet…";
+  if (leaderboardStatus) leaderboardStatus.textContent = "スコアを送信しています…";
   fetch(SCORE_SHEET_WEB_APP_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(entry)})
-    .then(()=>{ if(leaderboardStatus) leaderboardStatus.textContent="Score sent to Google Sheets. Refreshing shared rankings…"; window.setTimeout(refreshLeaderboard,1200); })
-    .catch(()=>{ if(leaderboardStatus) leaderboardStatus.textContent="Could not send to Google Sheets. Your score is saved on this device."; });
+    .then(()=>{ if(leaderboardStatus) leaderboardStatus.textContent="スコアを送信しました。共有ランキングを更新しています…"; window.setTimeout(refreshLeaderboard,1200); })
+    .catch(()=>{ if(leaderboardStatus) leaderboardStatus.textContent="Googleスプレッドシートに送信できませんでした。スコアはこの端末に保存されています。"; });
 }
 if (contestantNameInput) contestantNameInput.addEventListener("input",()=>contestantNameInput.classList.remove("name-needed"));
 refreshLeaderboard();
@@ -254,13 +254,13 @@ function updateNextKeyGuide() {
     return;
   }
   const nextChar = targetText[currentIndex];
-  romajiGuideEl.textContent = "NEXT KEY: " + nextChar.toUpperCase();
+  romajiGuideEl.textContent = "次のキー： " + nextChar.toUpperCase();
 }
 
 function startGame() {
   if (contestantNameInput && !contestantNameInput.value.trim()) {
     contestantNameInput.focus();
-    if (leaderboardStatus) leaderboardStatus.textContent = "Please enter your contestant name before starting.";
+    if (leaderboardStatus) leaderboardStatus.textContent = "開始する前に参加者名を入力してください。";
     return;
   }
   playSE(seStart);
@@ -272,8 +272,8 @@ function startGame() {
   resetPool("medium");
   resetPool("long");
 
-  if (scoreEl) scoreEl.textContent = "Score: 0";
-  if (timeEl) timeEl.textContent = "Time Left: 60";
+  if (scoreEl) scoreEl.textContent = "スコア：0";
+  if (timeEl) timeEl.textContent = "残り時間：60秒";
   if (gameOverEl) gameOverEl.textContent = "";
 
   if (inputEl) {
@@ -288,7 +288,7 @@ function startGame() {
   clearInterval(timer);
   timer = setInterval(() => {
     time--;
-    if (timeEl) timeEl.textContent = "Time Left: " + time;
+    if (timeEl) timeEl.textContent = "残り時間：" + time + "秒";
     if (time <= 0) {
       clearInterval(timer);
       startResultsCountdown();
@@ -303,20 +303,20 @@ function startResultsCountdown() {
   // Instantly lock typing input and hide active phrase boxes
   if (inputEl) {
     inputEl.value = "";
-    inputEl.placeholder = "Time Up!";
+    inputEl.placeholder = "時間切れ！";
     inputEl.disabled = true;
   }
-  if (kanjiEl) kanjiEl.textContent = "TIME UP!";
+  if (kanjiEl) kanjiEl.textContent = "時間切れ！";
   if (kanaEl) kanaEl.textContent = "";
   if (romajiGuideEl) romajiGuideEl.textContent = "";
 
   let countdownValue = 5;
-  if (gameOverEl) gameOverEl.textContent = `Results in ${countdownValue}...`;
+  if (gameOverEl) gameOverEl.textContent = `結果発表まで ${countdownValue} 秒...`;
 
   const countdownInterval = setInterval(() => {
     countdownValue--;
     if (countdownValue > 0) {
-      if (gameOverEl) gameOverEl.textContent = `Results in ${countdownValue}...`;
+      if (gameOverEl) gameOverEl.textContent = `結果発表まで ${countdownValue} 秒...`;
     } else {
       clearInterval(countdownInterval);
       showFinalResults();
@@ -328,13 +328,13 @@ function showFinalResults() {
   let bonus = currentIndex;
   const finalScore = score + bonus;
 
-  if (kanjiEl) kanjiEl.textContent = "Game Over";
+  if (kanjiEl) kanjiEl.textContent = "ゲーム終了";
   
   if (gameOverEl) {
     if (bonus > 0) {
-      gameOverEl.textContent = `Your Score: ${finalScore} (Bonus +${bonus}pt)`;
+      gameOverEl.textContent = `あなたのスコア：${finalScore}点（ボーナス +${bonus}点）`;
     } else {
-      gameOverEl.textContent = `Your Score: ${finalScore}`;
+      gameOverEl.textContent = `あなたのスコア：${finalScore}点`;
     }
   }
   submitContestScore(finalScore);
@@ -359,7 +359,7 @@ if (inputEl) {
       if (currentIndex >= targetText.length) {
         playSE(seCorrect);
         score += targetText.length;
-        if (scoreEl) scoreEl.textContent = "Score: " + score;
+        if (scoreEl) scoreEl.textContent = "スコア：" + score;
         setNewWord();
         return;
       }
