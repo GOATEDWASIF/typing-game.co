@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Typing Contest</title>
+  <title>辰巳中タイピングコンテスト（英語練習）</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page-loader" aria-label="Loading" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>TYPING CONTEST</span></div></div>
+  <div class="page-loader" aria-label="読み込み中" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>辰巳中タイピング</span></div></div>
 
-  <div class="language-switch-wrap"><a class="points-board-link" href="../points.html">Manual points board ↗</a><a class="language-switch" href="../index.html" aria-label="日本語に切り替え"><span>JP</span><strong>日本語</strong><span class="switch-arrow" aria-hidden="true">↗</span></a></div>
+  <div class="language-switch-wrap"><a class="points-board-link" href="../points.html">ポイント管理 ↗</a><a class="language-switch" href="../index.html" aria-label="日本語に切り替え"><span>JP</span><strong>日本語</strong><span class="switch-arrow" aria-hidden="true">↗</span></a></div>
 
   <div id="game">
-    <h1>Tatsumi JHS Typing .eng</h1>
+    <h1>辰巳中タイピング（英語練習）</h1>
 
-    <div class="contest-controls"><label for="contestant-name">Contestant name</label><input id="contestant-name" type="text" maxlength="24" autocomplete="nickname" placeholder="Enter your name"><p class="contest-hint">Enter your name before pressing START.</p></div>
+    <div class="contest-controls"><label for="contestant-name">参加者名</label><input id="contestant-name" type="text" maxlength="24" autocomplete="nickname" placeholder="名前を入力してください"><p class="contest-hint">名前を入力してから「開始」を押してください。</p></div>
 
     <div id="word-box">
-      <div id="kanji">Press START</div>
+      <div id="kanji">「開始」を押してください</div>
       <div id="kana" style="display: none;"></div>
       <div id="romaji-guide"></div>
     </div>
@@ -24,21 +24,21 @@
     <input
       type="text"
       id="input"
-      placeholder="Press START to begin typing"
+      placeholder="「開始」を押してタイピング開始"
       autocomplete="off"
       disabled
     >
 
     <div id="status">
-      <div id="score">Score: 0</div>
-      <div id="time">Time Left: 60</div>
+      <div id="score">スコア：0</div>
+      <div id="time">残り時間：60秒</div>
     </div>
 
-    <button id="start">START</button>
-    <button id="music-toggle" type="button" aria-pressed="false">♫ Music: Off</button>
+    <button id="start">開始</button>
+    <button id="music-toggle" type="button" aria-pressed="false">♫ 音楽：オフ</button>
 
     <div id="game-over"></div>
-    <section id="leaderboard" class="leaderboard" aria-live="polite"><h2>🏆 Contest leaderboard</h2><p class="leaderboard-status">Ready for scores</p><ol id="leaderboard-list"><li>No scores yet</li></ol></section>
+    <section id="leaderboard" class="leaderboard" aria-live="polite"><h2>🏆 ランキング</h2><p class="leaderboard-status">スコア送信の準備ができています</p><ol id="leaderboard-list"><li>まだスコアがありません</li></ol></section>
   </div>
 
   <!-- 固定された効果音 (Removed "sounds/") -->
