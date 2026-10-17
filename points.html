@@ -272,7 +272,8 @@
   }
 
   document.getElementById("add-player").addEventListener("click", () => {
-    const player = { id: nextId++, name: "Contestant " + nextId, score: 0 };
+    const id = nextId++;
+    const player = { id, name: "Contestant " + id, score: 0 };
     players.push(player); save(); render();
     const names = playersEl.querySelectorAll(".name");
     if (names.length) { names[names.length - 1].focus(); names[names.length - 1].select(); }
