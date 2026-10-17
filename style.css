@@ -420,3 +420,27 @@ a.points-board-link {
 a.points-board-link:hover { transform:translateY(-2px)!important; box-shadow:0 12px 28px rgba(0,0,0,.24)!important; }
 @media(max-width:600px) { a.points-board-link { left:8px!important; bottom:8px!important; min-height:38px!important; padding:8px 12px!important; font-size:11px!important; } }
 @media(prefers-reduced-motion:reduce) { a.points-board-link { transition:none!important; } }
+
+/* Hard fix: keep the English practice switch visible on the Japanese home page */
+.language-switch-wrap {
+  position: fixed !important;
+  top: 8px !important;
+  right: 10px !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+.language-switch-wrap > a.language-switch {
+  position: relative !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
