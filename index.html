@@ -2,18 +2,18 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>タイピングコンテスト用</title>
+  <title>辰巳中タイピングコンテスト</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page-loader" aria-label="Loading" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>TATSUMI TYPING</span></div></div>
+  <div class="page-loader" aria-label="読み込み中" role="status"><div class="page-loader__inner"><span class="page-loader__spinner" aria-hidden="true"></span><span>辰巳中タイピング</span></div></div>
 
-  <div class="language-switch-wrap"><a class="points-board-link" href="points.html">Manual points board ↗</a><a class="language-switch" href="english-game/index.html" aria-label="Switch to English"><span>EN</span><strong>English</strong><span class="switch-arrow" aria-hidden="true">↗</span></a></div>
+  <div class="language-switch-wrap"><a class="points-board-link" href="points.html">ポイント管理 ↗</a></div>
 
   <div id="game">
     <h1>辰巳中タイピング</h1>
 
-    <div class="contest-controls"><label for="contestant-name">参加者名</label><input id="contestant-name" type="text" maxlength="24" autocomplete="nickname" placeholder="名前を入力してください"><p class="contest-hint">名前を入力してから START を押してください</p></div>
+    <div class="contest-controls"><label for="contestant-name">参加者名</label><input id="contestant-name" type="text" maxlength="24" autocomplete="nickname" placeholder="名前を入力してください"><p class="contest-hint">名前を入力してから「開始」を押してください</p></div>
 
     <div id="word-box">
       <div id="kanji">スタート</div>
@@ -24,7 +24,7 @@
     <input
       type="text"
       id="input"
-      placeholder="STARTを押してタイピング開始"
+      placeholder="「開始」を押してタイピング開始"
       autocomplete="off"
       disabled
     >
@@ -34,8 +34,8 @@
       <div id="time">残り時間: 60</div>
     </div>
 
-    <button id="start">START</button>
-    <button id="music-toggle" type="button" aria-pressed="false">♫ Music: Off</button>
+    <button id="start">開始</button>
+    <button id="music-toggle" type="button" aria-pressed="false">♫ 音楽：オフ</button>
 
     <div id="game-over"></div>
     <section id="leaderboard" class="leaderboard" aria-live="polite"><h2>🏆 ランキング</h2><p class="leaderboard-status">スコア送信の準備ができています</p><ol id="leaderboard-list"><li>まだスコアがありません</li></ol></section>
