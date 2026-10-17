@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fff0c5">
 <meta name="color-scheme" content="light">
-<title>Points Board | Typing Contest</title>
+<title>ポイント管理 | 辰巳中タイピングコンテスト</title>
 <style>
   :root {
     color-scheme: light;
@@ -23,7 +23,7 @@
   html { min-height: 100%; background: var(--cream); }
   body {
     margin: 0; min-height: 100vh; min-height: 100dvh; padding: clamp(12px, 3vw, 32px);
-    color: var(--ink); font-family: Ubuntu, "Segoe UI", system-ui, sans-serif;
+    color: var(--ink); font-family: "Noto Sans JP", "Yu Gothic UI", "Meiryo", sans-serif;
     background:
       radial-gradient(ellipse at 12% 5%, rgba(255,255,255,.92), transparent 34%),
       radial-gradient(ellipse at 92% 28%, rgba(255,205,101,.42), transparent 35%),
@@ -129,46 +129,46 @@
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 <main class="shell">
   <header class="topline">
-    <div><p class="eyebrow">Tatsumi typing contest</p><h1>Points board</h1></div>
+    <div><p class="eyebrow">辰巳中タイピングコンテスト</p><h1>ポイント管理</h1></div>
     <div class="top-actions">
-      <button class="btn" id="fullscreen" type="button">Full screen</button>
-      <a class="btn" href="./" style="display:inline-flex;align-items:center;text-decoration:none">Game</a>
+      <button class="btn" id="fullscreen" type="button">全画面表示</button>
+      <a class="btn" href="./" style="display:inline-flex;align-items:center;text-decoration:none">ゲームに戻る</a>
     </div>
   </header>
 
   <section class="hero glass" aria-labelledby="overview-title">
     <div>
-      <p class="eyebrow">Live score display</p>
-      <h2 id="overview-title">Every point, beautifully clear.</h2>
-      <p>Enter contestants and adjust points manually. Changes are saved on this device, so the board stays ready when you come back.</p>
+      <p class="eyebrow">合計ポイント</p>
+      <h2 id="overview-title">ポイントをひと目で確認</h2>
+      <p>参加者を追加して、ポイントを手動で調整できます。変更内容はこの端末に保存されます。</p>
     </div>
     <div class="total-wrap" aria-live="polite" aria-atomic="true">
-      <span class="total-label">Combined points</span>
+      <span class="total-label">合計ポイント</span>
       <strong class="total" id="total">0</strong>
-      <span class="total-unit">points</span>
+      <span class="total-unit">ポイント</span>
     </div>
   </section>
 
   <div class="toolbar">
-    <div><h2>Contestants</h2><p>Tap + or −, or type a precise score.</p></div>
-    <button class="btn primary" id="add-player" type="button">＋ Add contestant</button>
+    <div><h2>参加者</h2><p>＋／−で増減、または数値を直接入力できます。</p></div>
+    <button class="btn primary" id="add-player" type="button">＋ 参加者を追加</button>
   </div>
 
-  <section id="players" aria-label="Contestant scores"></section>
+  <section id="players" aria-label="参加者の得点"></section>
   <div class="footer">
-    <span id="save-status" class="status" role="status" aria-live="polite">Saved on this device</span>
-    <button class="small-btn" id="reset-all" type="button">Reset all points</button>
+    <span id="save-status" class="status" role="status" aria-live="polite">この端末に保存しました</span>
+    <button class="small-btn" id="reset-all" type="button">Reset all ポイント</button>
   </div>
 </main>
 <script>
 (() => {
   "use strict";
-  const STORAGE_KEY = "tatsumi-points-board-v1";
+  const STORAGE_KEY = "tatsumi-ポイント-board-v1";
   const playersEl = document.getElementById("players");
   const totalEl = document.getElementById("total");
   const statusEl = document.getElementById("save-status");
@@ -180,19 +180,19 @@
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
       if (Array.isArray(saved)) return saved.filter(p => p && Number.isFinite(Number(p.score))).map((p, i) => ({
         id: Number(p.id) || i + 1,
-        name: String(p.name || "Contestant").slice(0, 40),
+        name: String(p.name || "参加者").slice(0, 40),
         score: Math.max(0, Math.min(999999999, Math.round(Number(p.score) || 0)))
       }));
     } catch (_) {}
-    return [{ id: 1, name: "Contestant 1", score: 0 }];
+    return [{ id: 1, name: "参加者 1", score: 0 }];
   }
 
   function save() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(players));
-      statusEl.textContent = "Saved on this device";
+      statusEl.textContent = "この端末に保存しました";
     } catch (_) {
-      statusEl.textContent = "Could not save here. Keep this tab open.";
+      statusEl.textContent = "保存できませんでした。この画面を開いたままにしてください。";
     }
     renderTotal();
   }
@@ -200,7 +200,7 @@
   function renderTotal() {
     const total = players.reduce((sum, p) => sum + p.score, 0);
     totalEl.textContent = total.toLocaleString();
-    totalEl.setAttribute("aria-label", total.toLocaleString() + " combined points");
+    totalEl.setAttribute("aria-label", total.toLocaleString() + " combined ポイント");
   }
 
   function make(tag, className, text) {
@@ -213,7 +213,7 @@
   function render() {
     playersEl.replaceChildren();
     if (!players.length) {
-      const empty = make("div", "empty glass", "No contestants yet. Select “Add contestant” to begin.");
+      const empty = make("div", "empty glass", "参加者がいません。「参加者を追加」から始めてください。");
       playersEl.append(empty);
     }
     players.forEach(player => {
@@ -223,39 +223,39 @@
       avatar.setAttribute("aria-hidden", "true");
       const name = make("input", "name");
       name.type = "text"; name.maxLength = 40; name.value = player.name;
-      name.setAttribute("aria-label", "Contestant name");
+      name.setAttribute("aria-label", "参加者 name");
       name.addEventListener("change", () => {
-        player.name = name.value.trim().slice(0, 40) || "Contestant";
+        player.name = name.value.trim().slice(0, 40) || "参加者";
         save(); render();
       });
       head.append(avatar, name);
-      const label = make("div", "score-label", "Current score");
+      const label = make("div", "score-label", "現在の得点");
       const line = make("div", "score-line");
       const number = make("strong", "score-number", player.score.toLocaleString());
       number.setAttribute("aria-live", "polite");
-      const word = make("span", "point-word", "pts");
+      const word = make("span", "point-word", "点");
       line.append(number, word);
       const actions = make("div", "score-actions");
       const minus = make("button", "stepper", "−");
-      minus.type = "button"; minus.setAttribute("aria-label", "Subtract one point from " + player.name);
+      minus.type = "button"; minus.setAttribute("aria-label", "さんのポイントを1点減らす " + player.name);
       minus.addEventListener("click", () => setScore(player, player.score - 1));
       const exact = make("input", "set-score");
       exact.type = "number"; exact.min = "0"; exact.max = "999999999"; exact.step = "1"; exact.inputMode = "numeric"; exact.value = String(player.score);
-      exact.setAttribute("aria-label", "Set exact points for " + player.name);
+      exact.setAttribute("aria-label", "Set exact ポイント for " + player.name);
       exact.addEventListener("change", () => {
         const value = exact.value.trim();
         if (value === "") { exact.value = String(player.score); return; }
         setScore(player, Number(value));
       });
       const plus = make("button", "stepper", "+");
-      plus.type = "button"; plus.setAttribute("aria-label", "Add one point to " + player.name);
+      plus.type = "button"; plus.setAttribute("aria-label", "さんのポイントを1点増やす " + player.name);
       plus.addEventListener("click", () => setScore(player, player.score + 1));
       actions.append(minus, exact, plus);
       const foot = make("div", "player-foot");
-      const hint = make("span", "point-word", "Manual score");
-      const remove = make("button", "small-btn", "Remove");
+      const hint = make("span", "point-word", "手動入力");
+      const remove = make("button", "small-btn", "削除");
       remove.type = "button"; remove.addEventListener("click", () => {
-        if (!confirm("Remove " + player.name + " from this board?")) return;
+        if (!confirm("削除 " + player.name + "」を一覧から削除しますか？")) return;
         players = players.filter(p => p.id !== player.id); save(); render();
       });
       foot.append(hint, remove);
@@ -273,14 +273,14 @@
 
   document.getElementById("add-player").addEventListener("click", () => {
     const id = nextId++;
-    const player = { id, name: "Contestant " + id, score: 0 };
+    const player = { id, name: "参加者 " + id, score: 0 };
     players.push(player); save(); render();
     const names = playersEl.querySelectorAll(".name");
     if (names.length) { names[names.length - 1].focus(); names[names.length - 1].select(); }
   });
 
   document.getElementById("reset-all").addEventListener("click", () => {
-    if (!confirm("Reset every contestant's score to zero? Names will be kept.")) return;
+    if (!confirm("全員の得点を0点に戻しますか？名前はそのまま残ります。")) return;
     players.forEach(p => { p.score = 0; }); save(); render();
   });
 
@@ -288,15 +288,15 @@
     try {
       if (!document.fullscreenElement) {
         await document.documentElement.requestFullscreen();
-        event.currentTarget.textContent = "Exit full screen";
+        event.currentTarget.textContent = "全画面表示を終了";
       } else {
         await document.exitFullscreen();
-        event.currentTarget.textContent = "Full screen";
+        event.currentTarget.textContent = "全画面表示";
       }
-    } catch (_) { statusEl.textContent = "Full screen is not available in this browser."; }
+    } catch (_) { statusEl.textContent = "全画面表示 is not available in this browser."; }
   });
   document.addEventListener("fullscreenchange", () => {
-    document.getElementById("fullscreen").textContent = document.fullscreenElement ? "Exit full screen" : "Full screen";
+    document.getElementById("fullscreen").textContent = document.fullscreenElement ? "全画面表示を終了" : "全画面表示";
   });
 
   // Pointer-driven glass highlights are enabled for mouse/trackpad only; touch stays lightweight.
